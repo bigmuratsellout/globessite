@@ -13,8 +13,9 @@
   <script type="module">
     import ThreeGlobe from 'https://esm.sh/three-globe?external=three';
     import * as THREE from 'https://esm.sh/three';
-    import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js?external=three';
+    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js?external=three';
 
+    // Initialize the globe
     const Globe = new ThreeGlobe()
       .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
       .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png');
@@ -22,35 +23,27 @@
     // Setup renderer
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
     document.getElementById('globeViz').appendChild(renderer.domElement);
 
     // Setup scene
     const scene = new THREE.Scene();
     scene.add(Globe);
-    scene.add(new THREE.AmbientLight(0xcccccc, Math.PI));
-    scene.add(new THREE.DirectionalLight(0xffffff, 0.6 * Math.PI));
 
     // Setup camera
     const camera = new THREE.PerspectiveCamera();
-    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     camera.position.z = 500;
 
-    // Add camera controls
-    const tbControls = new TrackballControls(camera, renderer.domElement);
-    tbControls.minDistance = 101;
-    tbControls.rotateSpeed = 5;
-    tbControls.zoomSpeed = 0.8;
-    tbControls.autoRotate = true; // Enable auto-rotation
-    tbControls.autoRotateSpeed = 0.5; // Adjust rotation speed (lower = slower)
+    // Add OrbitControls
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.autoRotate = true; // Enable auto-rotation
+    controls.autoRotateSpeed = 0.5; // Adjust rotation speed
 
-    // Kick-off renderer
-    (function animate() { // IIFE
-      // Frame cycle
-      tbControls.update(); // Ensure controls are updated
+    // Animation loop
+    (function animate() {
+      controls.update(); // Update controls
       renderer.render(scene, camera);
       requestAnimationFrame(animate);
     })();
-  </script>
-</body>
+  </script
