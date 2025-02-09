@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html>
 <head>
   <style> body { margin: 0; } </style>
 
@@ -13,7 +15,7 @@
   <script type="module">
     import ThreeGlobe from 'https://esm.sh/three-globe?external=three';
     import * as THREE from 'https://esm.sh/three';
-    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js?external=three';
+    import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js?external=three';
 
     // Initialize the globe
     const Globe = new ThreeGlobe()
@@ -28,6 +30,8 @@
     // Setup scene
     const scene = new THREE.Scene();
     scene.add(Globe);
+    scene.add(new THREE.AmbientLight(0xcccccc, Math.PI));
+    scene.add(new THREE.DirectionalLight(0xffffff, 0.6 * Math.PI));
 
     // Setup camera
     const camera = new THREE.PerspectiveCamera();
@@ -35,15 +39,26 @@
     camera.updateProjectionMatrix();
     camera.position.z = 500;
 
-    // Add OrbitControls
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.autoRotate = true; // Enable auto-rotation
-    controls.autoRotateSpeed = 0.5; // Adjust rotation speed
+    // Add TrackballControls
+    const controls = new TrackballControls(camera, renderer.domElement);
+    controls.rotateSpeed = 1.0; // Adjust rotation speed
+    controls.zoomSpeed = 1.2; // Adjust zoom speed
+    controls.panSpeed = 0.8; // Adjust pan speed
+    controls.noZoom = false; // Allow zooming
+    controls.noPan = false; // Allow panning
+    controls.staticMoving = true; // Smoother movement
+    controls.dynamicDampingFactor = 0.3; // Add damping for smoother controls
 
-    // Animation loop
+    // Enable auto-rotation
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.5; // Adjust auto-rotation speed
+
+    // Kick-off renderer
     (function animate() {
-      controls.update(); // Update controls
+      controls.update(); // Update controls (required for auto-rotation)
       renderer.render(scene, camera);
       requestAnimationFrame(animate);
     })();
-  </script
+  </script>
+</body>
+</html>
